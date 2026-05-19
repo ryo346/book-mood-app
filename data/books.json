@@ -1,0 +1,282 @@
+[
+  {
+    "title": "蜜蜂と遠雷",
+    "author": "恩田陸",
+    "genre": "novel",
+    "description": "ピアノコンクールを舞台に奏でられる青春と音楽の物語",
+    "tags": { "emotional": 3, "realistic": 3, "hopeful": 3, "long": 3, "heavy": 2 }
+  },
+  {
+    "title": "コンビニ人間",
+    "author": "村田沙耶香",
+    "genre": "novel",
+    "description": "社会の「普通」に馴染めない女性を描く芥川賞受賞作",
+    "tags": { "realistic": 4, "shocking": 3, "short": 4, "light": 2, "mystery": 2 }
+  },
+  {
+    "title": "羊と鋼の森",
+    "author": "宮下奈都",
+    "genre": "novel",
+    "description": "ピアノ調律師の青年が音と向き合い成長する物語",
+    "tags": { "healing": 3, "realistic": 3, "happy": 3, "normal": 2, "light": 2 }
+  },
+  {
+    "title": "夜は短し歩けよ乙女",
+    "author": "森見登美彦",
+    "genre": "novel",
+    "description": "京都を舞台にした奇天烈でロマンティックな恋愛ファンタジー",
+    "tags": { "exciting": 3, "semi_fantasy": 3, "happy": 3, "normal": 2, "light": 2 }
+  },
+  {
+    "title": "かがみの孤城",
+    "author": "辻村深月",
+    "genre": "novel",
+    "description": "不登校の7人が鏡の城で出会う心温まるミステリー",
+    "tags": { "emotional": 3, "semi_fantasy": 3, "hopeful": 4, "long": 3, "medium": 2 }
+  },
+  {
+    "title": "星の王子さま",
+    "author": "サン＝テグジュペリ",
+    "genre": "novel",
+    "description": "砂漠で出会った王子との対話が心に残る永遠の名作",
+    "tags": { "healing": 3, "fantasy": 3, "hopeful": 3, "short": 4, "light": 3, "sad": 2 }
+  },
+  {
+    "title": "博士の愛した数式",
+    "author": "小川洋子",
+    "genre": "novel",
+    "description": "記憶が80分しか続かない博士と家政婦の静かな交流",
+    "tags": { "healing": 3, "realistic": 3, "sad": 3, "normal": 2, "light": 2 }
+  },
+  {
+    "title": "告白",
+    "author": "湊かなえ",
+    "genre": "novel",
+    "description": "娘を殺した生徒への静かで冷酷な復讐を描く衝撃作",
+    "tags": { "heavy": 3, "realistic": 3, "mystery": 4, "shocking": 4, "normal": 2 }
+  },
+  {
+    "title": "君の膵臓をたべたい",
+    "author": "住野よる",
+    "genre": "novel",
+    "description": "余命宣告を受けた少女と無口な少年の青春ストーリー",
+    "tags": { "emotional": 4, "realistic": 3, "sad": 4, "normal": 2, "light": 2 }
+  },
+  {
+    "title": "ハリー・ポッターと賢者の石",
+    "author": "J.K.ローリング",
+    "genre": "novel",
+    "description": "魔法学校に入学した少年が歩む冒険と成長の物語",
+    "tags": { "exciting": 4, "fantasy": 4, "happy": 3, "very_long": 4, "medium": 2 }
+  },
+  {
+    "title": "HARD THINGS",
+    "author": "ベン・ホロウィッツ",
+    "genre": "business",
+    "description": "起業家が語る、誰も教えてくれない経営の本当の厳しさ",
+    "tags": { "motivation": 3, "heavy": 3, "startup": 4, "shocking": 3, "advanced": 3 }
+  },
+  {
+    "title": "ゼロ・トゥ・ワン",
+    "author": "ピーター・ティール",
+    "genre": "business",
+    "description": "PayPal創業者が語る、常識を超えたイノベーション論",
+    "tags": { "thinking": 3, "medium": 2, "startup": 4, "perspective": 3, "intermediate": 3 }
+  },
+  {
+    "title": "影響力の武器",
+    "author": "ロバート・チャルディーニ",
+    "genre": "business",
+    "description": "人が「YES」と言ってしまう6つの心理原則を解説",
+    "tags": { "thinking": 4, "medium": 2, "marketing": 3, "shocking": 3, "intermediate": 3 }
+  },
+  {
+    "title": "7つの習慣",
+    "author": "スティーブン・コヴィー",
+    "genre": "business",
+    "description": "世界中で読まれ続けるビジネスと人生の原則集",
+    "tags": { "motivation": 3, "heavy": 3, "productivity": 3, "action": 3, "beginner": 3 }
+  },
+  {
+    "title": "イノベーションのジレンマ",
+    "author": "クレイトン・クリステンセン",
+    "genre": "business",
+    "description": "優れた企業がなぜ失敗するのかを解き明かす経営理論書",
+    "tags": { "thinking": 4, "heavy": 3, "strategy": 4, "shocking": 3, "advanced": 3 }
+  },
+  {
+    "title": "エッセンシャル思考",
+    "author": "グレッグ・マキューン",
+    "genre": "business",
+    "description": "本当に重要なことだけに集中する「より少なく、より良く」の哲学",
+    "tags": { "motivation": 2, "light": 3, "productivity": 4, "action": 3, "beginner": 3 }
+  },
+  {
+    "title": "ファクトフルネス",
+    "author": "ハンス・ロスリング",
+    "genre": "business",
+    "description": "世界の本当の姿をデータで見る、10の思い込みを乗り越える方法",
+    "tags": { "thinking": 3, "medium": 2, "perspective": 4, "shocking": 2, "intermediate": 2 }
+  },
+  {
+    "title": "お金は寝かせて増やしなさい",
+    "author": "水瀬ケンイチ",
+    "genre": "business",
+    "description": "インデックス投資の基本と長期運用の考え方を丁寧に解説",
+    "tags": { "money": 4, "light": 3, "stable": 3, "beginner": 4, "action": 2 }
+  },
+  {
+    "title": "起業の科学",
+    "author": "田所雅之",
+    "genre": "business",
+    "description": "スタートアップの成功率を上げるための実践的フレームワーク集",
+    "tags": { "career": 3, "startup": 4, "action": 3, "advanced": 3, "heavy": 3 }
+  },
+  {
+    "title": "マッキンゼー流 問題解決思考",
+    "author": "大嶋祥誉",
+    "genre": "business",
+    "description": "世界最高の戦略コンサルが使う論理的問題解決の技術",
+    "tags": { "thinking": 4, "career": 3, "strategy": 4, "perspective": 3, "intermediate": 3 }
+  },
+  {
+    "title": "嫌われる勇気",
+    "author": "岸見一郎・古賀史健",
+    "genre": "self_help",
+    "description": "アドラー心理学を対話形式で解説した人生を変える一冊",
+    "tags": { "confidence": 4, "medium": 2, "mindset": 4, "insight": 4, "philosophical": 4 }
+  },
+  {
+    "title": "アウトプット大全",
+    "author": "樺沢紫苑",
+    "genre": "self_help",
+    "description": "インプットした知識を最大化するアウトプット術の決定版",
+    "tags": { "habit": 3, "light": 3, "action": 4, "motivated": 3, "practical": 4 }
+  },
+  {
+    "title": "マインドフルネスストレス低減法",
+    "author": "ジョン・カバットジン",
+    "genre": "self_help",
+    "description": "科学的に証明されたマインドフルネス瞑想の実践ガイド",
+    "tags": { "mental": 4, "heavy": 3, "emotion": 3, "calm": 4, "scientific": 3 }
+  },
+  {
+    "title": "人を動かす",
+    "author": "デール・カーネギー",
+    "genre": "self_help",
+    "description": "人間関係の原則を豊富なエピソードで学ぶ不朽の名著",
+    "tags": { "relationship": 4, "medium": 2, "communication": 4, "confident": 3, "story": 3 }
+  },
+  {
+    "title": "GRIT",
+    "author": "アンジェラ・ダックワース",
+    "genre": "self_help",
+    "description": "才能より「やり抜く力」が成功を決めるという科学的研究",
+    "tags": { "confidence": 3, "medium": 2, "action": 3, "motivated": 4, "scientific": 4 }
+  },
+  {
+    "title": "スタンフォードの自分を変える教室",
+    "author": "ケリー・マクゴニガル",
+    "genre": "self_help",
+    "description": "意志力を科学した、行動変容のための実践的心理学講義",
+    "tags": { "habit": 3, "medium": 2, "emotion": 4, "insight": 3, "scientific": 4 }
+  },
+  {
+    "title": "DIE WITH ZERO",
+    "author": "ビル・パーキンス",
+    "genre": "self_help",
+    "description": "人生を最大化するためにお金と時間を使い切る考え方",
+    "tags": { "mental": 3, "light": 3, "mindset": 3, "insight": 3, "practical": 3 }
+  },
+  {
+    "title": "夢をかなえるゾウ",
+    "author": "水野敬也",
+    "genre": "self_help",
+    "description": "ゾウの神様ガネーシャが教える成功習慣をストーリーで学ぶ",
+    "tags": { "habit": 3, "light": 4, "action": 3, "motivated": 4, "story": 4 }
+  },
+  {
+    "title": "反応しない練習",
+    "author": "草薙龍瞬",
+    "genre": "self_help",
+    "description": "ブッダの教えで心の無駄な反応をなくし楽になる方法",
+    "tags": { "mental": 4, "light": 3, "emotion": 4, "calm": 4, "philosophical": 3 }
+  },
+  {
+    "title": "限りある時間の使い方",
+    "author": "オリバー・バークマン",
+    "genre": "self_help",
+    "description": "4000週しかない人生で本当に大切なことに集中する哲学",
+    "tags": { "mental": 3, "medium": 2, "mindset": 4, "insight": 4, "philosophical": 4, "calm": 2 }
+  },
+  {
+    "title": "サピエンス全史",
+    "author": "ユヴァル・ノア・ハラリ",
+    "genre": "culture",
+    "description": "ホモ・サピエンスがいかに地球を支配したかを描く傑作",
+    "tags": { "history": 4, "deep": 3, "human": 4, "transformative": 4, "documentary": 3 }
+  },
+  {
+    "title": "銃・病原菌・鉄",
+    "author": "ジャレド・ダイアモンド",
+    "genre": "culture",
+    "description": "文明の栄枯盛衰を環境・地理から解き明かす大著",
+    "tags": { "history": 4, "academic": 4, "society": 4, "expansive": 4, "documentary": 3 }
+  },
+  {
+    "title": "コスモス",
+    "author": "カール・セーガン",
+    "genre": "culture",
+    "description": "宇宙の誕生から文明の未来まで壮大なスケールで語る名著",
+    "tags": { "science": 4, "deep": 3, "nature": 4, "curious": 4, "essay": 3 }
+  },
+  {
+    "title": "ソクラテスの弁明",
+    "author": "プラトン",
+    "genre": "culture",
+    "description": "哲学の父ソクラテスが死刑判決を前に語った命の問答",
+    "tags": { "philosophy": 4, "standard": 2, "human": 3, "transformative": 3, "essay": 4 }
+  },
+  {
+    "title": "ホモ・デウス",
+    "author": "ユヴァル・ノア・ハラリ",
+    "genre": "culture",
+    "description": "テクノロジーで「神」になろうとする人類の未来を予測",
+    "tags": { "science": 3, "deep": 3, "future": 4, "transformative": 4, "documentary": 3 }
+  },
+  {
+    "title": "フェルマーの最終定理",
+    "author": "サイモン・シン",
+    "genre": "culture",
+    "description": "358年間解かれなかった数学の難問を巡る人間ドラマ",
+    "tags": { "science": 3, "standard": 2, "curious": 4, "documentary": 4, "enjoyable": 3 }
+  },
+  {
+    "title": "現代語訳 論語と算盤",
+    "author": "渋沢栄一",
+    "genre": "culture",
+    "description": "近代日本の父が説く道徳と経済を両立させる生き方",
+    "tags": { "philosophy": 3, "introductory": 3, "culture": 4, "insight": 3, "essay": 3 }
+  },
+  {
+    "title": "池上彰の世界の見方",
+    "author": "池上彰",
+    "genre": "culture",
+    "description": "現代世界の複雑な構造をわかりやすく解説するシリーズ",
+    "tags": { "culture": 3, "introductory": 4, "society": 4, "expansive": 3, "lecture": 4 }
+  },
+  {
+    "title": "宇宙はなぜこうあるのか",
+    "author": "青木薫",
+    "genre": "culture",
+    "description": "物理学の最前線から宇宙の謎と人間の存在意義に迫る",
+    "tags": { "science": 4, "standard": 2, "nature": 4, "curious": 4, "lecture": 3 }
+  },
+  {
+    "title": "哲学と宗教全史",
+    "author": "出口治明",
+    "genre": "culture",
+    "description": "古代から現代まで人類の思想の流れを一冊で俯瞰する大全",
+    "tags": { "history": 3, "philosophy": 4, "deep": 3, "human": 3, "culture": 4, "expansive": 3, "lecture": 3 }
+  }
+]
