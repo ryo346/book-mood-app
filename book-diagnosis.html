@@ -135,7 +135,13 @@
       background: var(--white); border-radius: 16px;
       padding: 18px; display: flex; gap: 14px; align-items: flex-start;
       box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      cursor: pointer; text-decoration: none; color: inherit;
+      border: 2px solid transparent;
+      transition: border-color .15s, box-shadow .15s, transform .1s;
+      display: flex;
     }
+    .book-card:hover { border-color: #f97316; box-shadow: 0 4px 16px rgba(249,115,22,.18); }
+    .book-card:active { transform: scale(.97); }
     .rank {
       width: 38px; height: 38px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -147,6 +153,13 @@
     .b-title { font-size: 16px; font-weight: 700; line-height: 1.4; }
     .b-author { font-size: 13px; color: var(--primary); margin-top: 3px; }
     .b-desc { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+    .b-amazon {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 10px; font-size: 12px; font-weight: 700;
+      color: #ea580c; background: #fff7ed;
+      border: 1.5px solid #fdba74; border-radius: 8px;
+      padding: 5px 10px;
+    }
     .result-actions { display: flex; flex-direction: column; gap: 10px; }
   </style>
 </head>
@@ -490,14 +503,19 @@ function showResult() {
   list.innerHTML = '';
   const ranks = ['1st','2nd','3rd'];
   top3.forEach(({ b }, i) => {
-    const card = document.createElement('div');
+    const url = 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(b.title + ' ' + b.author);
+    const card = document.createElement('a');
     card.className = 'book-card';
+    card.href = url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
     card.innerHTML =
       `<div class="rank rank-${i+1}">${ranks[i]}</div>` +
       `<div>` +
         `<div class="b-title">${b.title}</div>` +
         `<div class="b-author">${b.author}</div>` +
         `<div class="b-desc">${b.description}</div>` +
+        `<div class="b-amazon">🛒 Amazonで見る →</div>` +
       `</div>`;
     list.appendChild(card);
   });
