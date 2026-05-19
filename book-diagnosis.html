@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>気分診断 本レコメンド</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --bg: #f5f5fb;
+      --white: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 20px 48px; }
+    .screen.active { display: flex; animation: fadeUp .22s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0);  }
+    }
+
+    /* ── TOP ── */
+    .top-body {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 60px 0 40px;
+    }
+    .top-icon { font-size: 68px; margin-bottom: 20px; animation: bob 3s ease-in-out infinite; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+    .top-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 10px; }
+    .top-sub { font-size: 15px; color: var(--muted); line-height: 1.65; margin-bottom: 36px; }
+    .steps { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; }
+    .step {
+      background: var(--white); border-radius: 14px;
+      padding: 13px 16px; display: flex; align-items: center; gap: 14px;
+      font-size: 14px; color: var(--muted);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .step-icon { font-size: 22px; }
+
+    /* ── Buttons ── */
+    .btn-main {
+      width: 100%; background: var(--primary); color: #fff; border: none;
+      border-radius: 16px; padding: 18px; font-size: 17px; font-weight: 700;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,.38);
+      transition: background .15s, transform .1s;
+    }
+    .btn-main:hover { background: var(--primary-dark); }
+    .btn-main:active { transform: scale(.97); }
+
+    .btn-sub {
+      width: 100%; background: var(--white); color: var(--muted);
+      border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 14px; font-size: 15px; font-weight: 500; cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-sub:hover { background: #f9fafb; }
+    .btn-sub:active { transform: scale(.97); }
+
+    /* ── Screen header ── */
+    .s-head { padding-top: 44px; margin-bottom: 28px; }
+    .s-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.6px; color: var(--primary); margin-bottom: 8px;
+    }
+    .s-title { font-size: 22px; font-weight: 800; }
+    .s-desc { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Genre cards ── */
+    .genre-list { display: flex; flex-direction: column; gap: 12px; }
+    .genre-card {
+      background: var(--white); border: 2px solid transparent; border-radius: 16px;
+      padding: 18px 18px; display: flex; align-items: center; gap: 16px;
+      cursor: pointer; text-align: left;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      transition: border-color .15s, background .15s, transform .1s, box-shadow .15s;
+    }
+    .genre-card:hover { border-color: #c7d2fe; background: #f5f7ff; box-shadow: 0 4px 12px rgba(0,0,0,.09); }
+    .genre-card:active { transform: scale(.97); }
+    .g-emoji { font-size: 34px; }
+    .g-name { font-size: 17px; font-weight: 700; }
+    .g-desc { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+    /* ── Progress ── */
+    .prog-wrap { padding-top: 36px; margin-bottom: 32px; }
+    .prog-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .prog-bar { width: 100%; height: 6px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+    .prog-fill {
+      height: 100%; background: linear-gradient(90deg, var(--primary), #818cf8);
+      border-radius: 99px; transition: width .35s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Question ── */
+    .q-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin-bottom: 10px; }
+    .q-text { font-size: 20px; font-weight: 800; line-height: 1.4; margin-bottom: 28px; }
+
+    .choices { display: flex; flex-direction: column; gap: 12px; }
+    .choice {
+      background: var(--white); border: 2px solid transparent; border-radius: 16px;
+      padding: 17px 20px; font-size: 16px; font-weight: 500; color: var(--text);
+      cursor: pointer; text-align: left;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      transition: border-color .12s, background .12s, transform .1s;
+    }
+    .choice:hover { border-color: #c7d2fe; background: #f5f7ff; }
+    .choice.picked {
+      background: var(--primary); border-color: var(--primary);
+      color: #fff; transform: scale(.98);
+      box-shadow: 0 4px 14px rgba(99,102,241,.35);
+    }
+
+    /* ── Result ── */
+    .book-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .book-card {
+      background: var(--white); border-radius: 16px;
+      padding: 18px; display: flex; gap: 14px; align-items: flex-start;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .rank {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+    }
+    .rank-1 { background: linear-gradient(135deg,#f59e0b,#fbbf24); }
+    .rank-2 { background: linear-gradient(135deg,#9ca3af,#d1d5db); color: #444; }
+    .rank-3 { background: linear-gradient(135deg,#92400e,#b45309); }
+    .b-title { font-size: 16px; font-weight: 700; line-height: 1.4; }
+    .b-author { font-size: 13px; color: var(--primary); margin-top: 3px; }
+    .b-desc { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+    .result-actions { display: flex; flex-direction: column; gap: 10px; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP -->
+  <div id="s-top" class="screen active">
+    <div class="top-body">
+      <div class="top-icon">📚</div>
+      <h1 class="top-title">気分で本を診断</h1>
+      <p class="top-sub">今の気分に合った本を<br>あなたに3冊おすすめします</p>
+      <div class="steps">
+        <div class="step"><span class="step-icon">🎭</span><span>ジャンルを選ぶ</span></div>
+        <div class="step"><span class="step-icon">❓</span><span>5つの質問に答える</span></div>
+        <div class="step"><span class="step-icon">✨</span><span>ぴったりの3冊が見つかる</span></div>
+      </div>
+      <button class="btn-main" onclick="go('genre')">診断スタート</button>
+    </div>
+  </div>
+
+  <!-- GENRE -->
+  <div id="s-genre" class="screen">
+    <div class="s-head">
+      <div class="s-label">Step 1</div>
+      <div class="s-title">ジャンルを選んでください</div>
+      <div class="s-desc">気になるジャンルを1つ選んでください</div>
+    </div>
+    <div class="genre-list">
+      <button class="genre-card" onclick="startQuiz('novel')">
+        <span class="g-emoji">📖</span>
+        <div><div class="g-name">小説</div><div class="g-desc">感動・冒険・恋愛など</div></div>
+      </button>
+      <button class="genre-card" onclick="startQuiz('business')">
+        <span class="g-emoji">💼</span>
+        <div><div class="g-name">ビジネス</div><div class="g-desc">仕事・お金・起業など</div></div>
+      </button>
+      <button class="genre-card" onclick="startQuiz('self_help')">
+        <span class="g-emoji">🌱</span>
+        <div><div class="g-name">自己啓発</div><div class="g-desc">習慣・メンタル・成長など</div></div>
+      </button>
+      <button class="genre-card" onclick="startQuiz('culture')">
+        <span class="g-emoji">🌍</span>
+        <div><div class="g-name">教養</div><div class="g-desc">歴史・科学・哲学など</div></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="s-questions" class="screen">
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span id="p-count"></span>
+        <span id="p-pct"></span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="p-fill"></div></div>
+    </div>
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="choices" id="choices"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="s-result" class="screen">
+    <div class="s-head">
+      <div class="s-label" id="r-label"></div>
+      <div class="s-title">あなたにおすすめの3冊</div>
+      <div class="s-desc">今の気分にぴったりの本を選びました</div>
+    </div>
+    <div class="book-list" id="book-list"></div>
+    <div class="result-actions">
+      <button class="btn-main" onclick="go('genre')">もう一度診断する</button>
+      <button class="btn-sub"  onclick="go('top')">トップへ戻る</button>
+    </div>
+  </div>
+
+</div>
+<script>
+// ─── DATA ───────────────────────────────────────────────
+
+const QS = {
+  novel: [
+    { text: "今の気分は？", choices: [
+      { label: "泣きたい気分",        tags: { emotional: 3 } },
+      { label: "癒されたい",          tags: { healing: 3 } },
+      { label: "ワクワクしたい",      tags: { exciting: 3 } },
+      { label: "不思議な世界に浸りたい", tags: { fantasy: 3 } },
+    ]},
+    { text: "読みやすさはどのくらい？", choices: [
+      { label: "サクッと軽い",        tags: { light: 3 } },
+      { label: "普通",                tags: { medium: 2 } },
+      { label: "読み応えあり",        tags: { heavy: 3 } },
+      { label: "超重厚でもOK",        tags: { very_heavy: 4 } },
+    ]},
+    { text: "どんな世界観を楽しみたい？", choices: [
+      { label: "現実的な話",          tags: { realistic: 3 } },
+      { label: "少し非現実",          tags: { semi_fantasy: 3 } },
+      { label: "完全ファンタジー",    tags: { fantasy: 4 } },
+      { label: "ミステリー・謎解き",  tags: { mystery: 4 } },
+    ]},
+    { text: "読み終わったあと、どんな気持ちになりたい？", choices: [
+      { label: "幸せな気持ち",        tags: { happy: 3 } },
+      { label: "切ない余韻",          tags: { sad: 3 } },
+      { label: "希望が持てる",        tags: { hopeful: 3 } },
+      { label: "衝撃を受けたい",      tags: { shocking: 3 } },
+    ]},
+    { text: "本の長さは？", choices: [
+      { label: "短編・さらっと読める", tags: { short: 3 } },
+      { label: "普通の長さ",          tags: { normal: 2 } },
+      { label: "長編",                tags: { long: 3 } },
+      { label: "超長編でも読む",      tags: { very_long: 4 } },
+    ]},
+  ],
+  business: [
+    { text: "今あなたが抱えている課題は？", choices: [
+      { label: "モチベが上がらない",    tags: { motivation: 3 } },
+      { label: "思考力を鍛えたい",      tags: { thinking: 3 } },
+      { label: "キャリアを変えたい",    tags: { career: 3 } },
+      { label: "お金の知識をつけたい",  tags: { money: 3 } },
+    ]},
+    { text: "読書の重さはどのくらい？", choices: [
+      { label: "軽め・読みやすい",      tags: { light: 3 } },
+      { label: "普通",                  tags: { medium: 2 } },
+      { label: "読み応えある",          tags: { heavy: 3 } },
+      { label: "超本格的でもOK",        tags: { very_heavy: 4 } },
+    ]},
+    { text: "学びたい分野は？", choices: [
+      { label: "起業・スタートアップ",  tags: { startup: 3 } },
+      { label: "マーケティング",        tags: { marketing: 3 } },
+      { label: "戦略・経営",            tags: { strategy: 3 } },
+      { label: "生産性・仕事術",        tags: { productivity: 3 } },
+    ]},
+    { text: "読後にどんな感覚を得たい？", choices: [
+      { label: "すぐ行動したくなる",    tags: { action: 3 } },
+      { label: "視野が広がる",          tags: { perspective: 3 } },
+      { label: "衝撃・常識を覆す",      tags: { shocking: 3 } },
+      { label: "安心・軸が定まる",      tags: { stable: 3 } },
+    ]},
+    { text: "ビジネス書の難易度は？", choices: [
+      { label: "初心者向け",            tags: { beginner: 3 } },
+      { label: "中級",                  tags: { intermediate: 3 } },
+      { label: "上級",                  tags: { advanced: 3 } },
+      { label: "超上級でも",            tags: { expert: 4 } },
+    ]},
+  ],
+  self_help: [
+    { text: "今一番変えたいことは？", choices: [
+      { label: "自信をつけたい",          tags: { confidence: 3 } },
+      { label: "習慣を変えたい",          tags: { habit: 3 } },
+      { label: "メンタルを強くしたい",    tags: { mental: 3 } },
+      { label: "人間関係を改善したい",    tags: { relationship: 3 } },
+    ]},
+    { text: "読書の重さは？", choices: [
+      { label: "軽くサクッと",            tags: { light: 3 } },
+      { label: "普通",                    tags: { medium: 2 } },
+      { label: "読み応えあり",            tags: { heavy: 3 } },
+      { label: "超本格的でも",            tags: { very_heavy: 4 } },
+    ]},
+    { text: "変えたいこととして近いのは？", choices: [
+      { label: "行動・習慣",              tags: { action: 3 } },
+      { label: "考え方・マインドセット",  tags: { mindset: 3 } },
+      { label: "感情コントロール",        tags: { emotion: 3 } },
+      { label: "コミュニケーション",      tags: { communication: 3 } },
+    ]},
+    { text: "読み終わったあとどう感じたい？", choices: [
+      { label: "やる気に満ちる",          tags: { motivated: 3 } },
+      { label: "穏やかになる",            tags: { calm: 3 } },
+      { label: "自信がつく",              tags: { confident: 3 } },
+      { label: "大切な気づきがある",      tags: { insight: 3 } },
+    ]},
+    { text: "好みのスタイルは？", choices: [
+      { label: "実践的なノウハウ",        tags: { practical: 3 } },
+      { label: "科学的・研究ベース",      tags: { scientific: 3 } },
+      { label: "体験談・ストーリー",      tags: { story: 3 } },
+      { label: "哲学的・深く考える",      tags: { philosophical: 4 } },
+    ]},
+  ],
+  culture: [
+    { text: "興味がある分野は？", choices: [
+      { label: "歴史・文明",            tags: { history: 3 } },
+      { label: "科学・テクノロジー",    tags: { science: 3 } },
+      { label: "哲学・倫理",            tags: { philosophy: 3 } },
+      { label: "文化・社会",            tags: { culture: 3 } },
+    ]},
+    { text: "どのくらい深く学びたい？", choices: [
+      { label: "入門・概要をざっと",    tags: { introductory: 3 } },
+      { label: "標準的な深さ",          tags: { standard: 2 } },
+      { label: "しっかり深掘り",        tags: { deep: 3 } },
+      { label: "学術的でもOK",          tags: { academic: 4 } },
+    ]},
+    { text: "探求したいテーマは？", choices: [
+      { label: "人間の本質・存在",      tags: { human: 3 } },
+      { label: "宇宙・自然の神秘",      tags: { nature: 3 } },
+      { label: "社会の仕組み・構造",    tags: { society: 3 } },
+      { label: "未来・テクノロジー",    tags: { future: 3 } },
+    ]},
+    { text: "読んだ後にどう感じたい？", choices: [
+      { label: "世界が広がる感覚",      tags: { expansive: 3 } },
+      { label: "知的好奇心が満たされる", tags: { curious: 3 } },
+      { label: "人生観が変わる",        tags: { transformative: 3 } },
+      { label: "純粋に面白い",          tags: { enjoyable: 3 } },
+    ]},
+    { text: "好みの文体・形式は？", choices: [
+      { label: "対話・エッセイ調",      tags: { essay: 3 } },
+      { label: "講義・解説スタイル",    tags: { lecture: 3 } },
+      { label: "ドキュメンタリー調",    tags: { documentary: 3 } },
+      { label: "図解・ビジュアル多め",  tags: { visual: 4 } },
+    ]},
+  ],
+};
+
+const BOOKS = [
+  // ── 小説 ──
+  { title:"蜜蜂と遠雷",           author:"恩田陸",              genre:"novel",    description:"ピアノコンクールを舞台に奏でられる青春と音楽の感動大作",   tags:{emotional:3,realistic:3,hopeful:3,long:3,heavy:2} },
+  { title:"コンビニ人間",          author:"村田沙耶香",          genre:"novel",    description:"社会の「普通」に馴染めない女性を描く芥川賞受賞作",         tags:{realistic:4,shocking:3,short:4,light:2,mystery:2} },
+  { title:"羊と鋼の森",            author:"宮下奈都",            genre:"novel",    description:"ピアノ調律師の青年が音と向き合い成長する静かな物語",       tags:{healing:3,realistic:3,happy:3,normal:2,light:2} },
+  { title:"夜は短し歩けよ乙女",    author:"森見登美彦",          genre:"novel",    description:"京都を舞台にした奇天烈でロマンティックな恋愛ファンタジー", tags:{exciting:3,semi_fantasy:3,happy:3,normal:2,light:2} },
+  { title:"かがみの孤城",          author:"辻村深月",            genre:"novel",    description:"不登校の7人が鏡の城で出会う心温まるミステリー",           tags:{emotional:3,semi_fantasy:3,hopeful:4,long:3,medium:2} },
+  { title:"星の王子さま",          author:"サン＝テグジュペリ",  genre:"novel",    description:"砂漠で出会った王子との対話が心に残る永遠の名作",           tags:{healing:3,fantasy:3,hopeful:3,short:4,light:3,sad:2} },
+  { title:"博士の愛した数式",      author:"小川洋子",            genre:"novel",    description:"記憶が80分しか続かない博士と家政婦の静かな交流",           tags:{healing:3,realistic:3,sad:3,normal:2,light:2} },
+  { title:"告白",                  author:"湊かなえ",            genre:"novel",    description:"娘を殺した生徒への静かで冷酷な復讐を描く衝撃作",           tags:{heavy:3,realistic:3,mystery:4,shocking:4,normal:2} },
+  { title:"君の膵臓をたべたい",    author:"住野よる",            genre:"novel",    description:"余命宣告を受けた少女と無口な少年の切ない青春ストーリー",   tags:{emotional:4,realistic:3,sad:4,normal:2,light:2} },
+  { title:"ハリー・ポッターと賢者の石", author:"J.K.ローリング", genre:"novel",    description:"魔法学校に入学した少年が歩む冒険と成長の物語",             tags:{exciting:4,fantasy:4,happy:3,very_long:4,medium:2} },
+  // ── ビジネス ──
+  { title:"HARD THINGS",           author:"ベン・ホロウィッツ",  genre:"business", description:"起業家が語る、誰も教えてくれない経営の本当の厳しさ",       tags:{motivation:3,heavy:3,startup:4,shocking:3,advanced:3} },
+  { title:"ゼロ・トゥ・ワン",      author:"ピーター・ティール",  genre:"business", description:"PayPal創業者が語る、常識を超えたイノベーション論",         tags:{thinking:3,medium:2,startup:4,perspective:3,intermediate:3} },
+  { title:"影響力の武器",          author:"R.チャルディーニ",    genre:"business", description:"人が「YES」と言ってしまう6つの心理原則を徹底解説",         tags:{thinking:4,medium:2,marketing:3,shocking:3,intermediate:3} },
+  { title:"7つの習慣",             author:"スティーブン・コヴィー", genre:"business", description:"世界中で読まれ続けるビジネスと人生の原則集",            tags:{motivation:3,heavy:3,productivity:3,action:3,beginner:3} },
+  { title:"イノベーションのジレンマ", author:"C.クリステンセン", genre:"business", description:"優れた企業がなぜ失敗するのかを解き明かす経営理論書",       tags:{thinking:4,heavy:3,strategy:4,shocking:3,advanced:3} },
+  { title:"エッセンシャル思考",    author:"グレッグ・マキューン", genre:"business", description:"本当に重要なことだけに集中する「より少なく、より良く」の哲学", tags:{motivation:2,light:3,productivity:4,action:3,beginner:3} },
+  { title:"ファクトフルネス",      author:"ハンス・ロスリング",  genre:"business", description:"世界の本当の姿をデータで見る、10の思い込みを乗り越える方法", tags:{thinking:3,medium:2,perspective:4,shocking:2,intermediate:2} },
+  { title:"お金は寝かせて増やしなさい", author:"水瀬ケンイチ",  genre:"business", description:"インデックス投資の基本と長期運用の考え方を丁寧に解説",     tags:{money:4,light:3,stable:3,beginner:4,action:2} },
+  { title:"起業の科学",            author:"田所雅之",            genre:"business", description:"スタートアップの成功率を上げる実践的フレームワーク集",       tags:{career:3,startup:4,action:3,advanced:3,heavy:3} },
+  { title:"マッキンゼー流 問題解決思考", author:"大嶋祥誉",      genre:"business", description:"世界最高の戦略コンサルが使う論理的問題解決の技術",         tags:{thinking:4,career:3,strategy:4,perspective:3,intermediate:3} },
+  // ── 自己啓発 ──
+  { title:"嫌われる勇気",          author:"岸見一郎・古賀史健",  genre:"self_help", description:"アドラー心理学を対話形式で解説した人生を変える一冊",     tags:{confidence:4,medium:2,mindset:4,insight:4,philosophical:4} },
+  { title:"アウトプット大全",      author:"樺沢紫苑",            genre:"self_help", description:"インプットした知識を最大化するアウトプット術の決定版",     tags:{habit:3,light:3,action:4,motivated:3,practical:4} },
+  { title:"マインドフルネスストレス低減法", author:"J.カバットジン", genre:"self_help", description:"科学的に証明されたマインドフルネス瞑想の実践ガイド", tags:{mental:4,heavy:3,emotion:3,calm:4,scientific:3} },
+  { title:"人を動かす",            author:"デール・カーネギー",  genre:"self_help", description:"人間関係の原則を豊富なエピソードで学ぶ不朽の名著",         tags:{relationship:4,medium:2,communication:4,confident:3,story:3} },
+  { title:"GRIT",                  author:"A.ダックワース",       genre:"self_help", description:"才能より「やり抜く力」が成功を決めるという科学的研究",     tags:{confidence:3,medium:2,action:3,motivated:4,scientific:4} },
+  { title:"スタンフォードの自分を変える教室", author:"K.マクゴニガル", genre:"self_help", description:"意志力を科学した、行動変容のための実践的心理学講義", tags:{habit:3,medium:2,emotion:4,insight:3,scientific:4} },
+  { title:"DIE WITH ZERO",         author:"ビル・パーキンス",    genre:"self_help", description:"人生を最大化するためにお金と時間を使い切る考え方",         tags:{mental:3,light:3,mindset:3,insight:3,practical:3} },
+  { title:"夢をかなえるゾウ",      author:"水野敬也",            genre:"self_help", description:"ゾウの神様ガネーシャが教える成功習慣をストーリーで学ぶ",   tags:{habit:3,light:4,action:3,motivated:4,story:4} },
+  { title:"反応しない練習",        author:"草薙龍瞬",            genre:"self_help", description:"ブッダの教えで心の無駄な反応をなくし楽になる方法",         tags:{mental:4,light:3,emotion:4,calm:4,philosophical:3} },
+  { title:"限りある時間の使い方",  author:"オリバー・バークマン", genre:"self_help", description:"4000週しかない人生で本当に大切なことに集中する哲学",      tags:{mental:3,medium:2,mindset:4,insight:4,philosophical:4,calm:2} },
+  // ── 教養 ──
+  { title:"サピエンス全史",        author:"ユヴァル・ノア・ハラリ", genre:"culture", description:"ホモ・サピエンスがいかに地球を支配したかを描く傑作",     tags:{history:4,deep:3,human:4,transformative:4,documentary:3} },
+  { title:"銃・病原菌・鉄",        author:"ジャレド・ダイアモンド", genre:"culture", description:"文明の栄枯盛衰を環境・地理から解き明かす圧巻の大著",     tags:{history:4,academic:4,society:4,expansive:4,documentary:3} },
+  { title:"コスモス",              author:"カール・セーガン",    genre:"culture", description:"宇宙の誕生から文明の未来まで壮大なスケールで語る名著",       tags:{science:4,deep:3,nature:4,curious:4,essay:3} },
+  { title:"ソクラテスの弁明",      author:"プラトン",            genre:"culture", description:"哲学の父ソクラテスが死刑判決を前に語った命の問答",           tags:{philosophy:4,standard:2,human:3,transformative:3,essay:4} },
+  { title:"ホモ・デウス",          author:"ユヴァル・ノア・ハラリ", genre:"culture", description:"テクノロジーで「神」になろうとする人類の未来を予測",     tags:{science:3,deep:3,future:4,transformative:4,documentary:3} },
+  { title:"フェルマーの最終定理",  author:"サイモン・シン",      genre:"culture", description:"358年間解かれなかった数学の難問を巡る人間ドラマ",           tags:{science:3,standard:2,curious:4,documentary:4,enjoyable:3} },
+  { title:"現代語訳 論語と算盤",   author:"渋沢栄一",            genre:"culture", description:"近代日本の父が説く道徳と経済を両立させる生き方",             tags:{philosophy:3,introductory:3,culture:3,insight:3,essay:3} },
+  { title:"池上彰の世界の見方",    author:"池上彰",              genre:"culture", description:"現代世界の複雑な構造をわかりやすく解説するシリーズ",         tags:{culture:3,introductory:4,society:4,expansive:3,lecture:4} },
+  { title:"宇宙はなぜこうあるのか", author:"青木薫",             genre:"culture", description:"物理学の最前線から宇宙の謎と人間の存在意義に迫る",           tags:{science:4,standard:2,nature:4,curious:4,lecture:3} },
+  { title:"哲学と宗教全史",        author:"出口治明",            genre:"culture", description:"古代から現代まで人類の思想の流れを一冊で俯瞰する大全",       tags:{history:3,philosophy:4,deep:3,human:3,culture:4,expansive:3,lecture:3} },
+];
+
+const GENRE_LABEL = { novel:"小説", business:"ビジネス", self_help:"自己啓発", culture:"教養" };
+
+// ─── STATE ──────────────────────────────────────────────
+let genre = null;
+let qIndex = 0;
+let tags = {};
+
+// ─── NAVIGATION ─────────────────────────────────────────
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── QUIZ ────────────────────────────────────────────────
+function startQuiz(g) {
+  genre = g; qIndex = 0; tags = {};
+  renderQ();
+  go('questions');
+}
+
+function renderQ() {
+  const qs = QS[genre];
+  const q  = qs[qIndex];
+  const total   = qs.length;
+  const current = qIndex + 1;
+  const pct     = Math.round(current / total * 100);
+
+  document.getElementById('p-count').textContent = current + ' / ' + total;
+  document.getElementById('p-pct').textContent   = pct + '%';
+  document.getElementById('p-fill').style.width  = pct + '%';
+  document.getElementById('q-num').textContent   = 'Q' + current;
+  document.getElementById('q-text').textContent  = q.text;
+
+  const wrap = document.getElementById('choices');
+  wrap.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className   = 'choice';
+    btn.textContent = c.label;
+    btn.onclick = () => pick(i, btn);
+    wrap.appendChild(btn);
+  });
+}
+
+function pick(i, btn) {
+  // lock buttons
+  document.querySelectorAll('.choice').forEach(b => b.onclick = null);
+  btn.classList.add('picked');
+
+  const choiceTags = QS[genre][qIndex].choices[i].tags;
+  for (const [tag, v] of Object.entries(choiceTags)) {
+    tags[tag] = (tags[tag] || 0) + v;
+  }
+
+  setTimeout(() => {
+    if (qIndex + 1 < QS[genre].length) {
+      qIndex++;
+      renderQ();
+    } else {
+      showResult();
+    }
+  }, 300);
+}
+
+// ─── SCORING ─────────────────────────────────────────────
+function score(book) {
+  let s = 0;
+  for (const [tag, uv] of Object.entries(tags)) s += uv * (book.tags[tag] || 0);
+  return s;
+}
+
+function showResult() {
+  const top3 = BOOKS
+    .filter(b => b.genre === genre)
+    .map(b => ({ b, s: score(b) }))
+    .sort((a, b) => b.s - a.s)
+    .slice(0, 3);
+
+  document.getElementById('r-label').textContent = GENRE_LABEL[genre] + ' / 診断結果';
+
+  const list = document.getElementById('book-list');
+  list.innerHTML = '';
+  const ranks = ['1st','2nd','3rd'];
+  top3.forEach(({ b }, i) => {
+    const card = document.createElement('div');
+    card.className = 'book-card';
+    card.innerHTML =
+      `<div class="rank rank-${i+1}">${ranks[i]}</div>` +
+      `<div>` +
+        `<div class="b-title">${b.title}</div>` +
+        `<div class="b-author">${b.author}</div>` +
+        `<div class="b-desc">${b.description}</div>` +
+      `</div>`;
+    list.appendChild(card);
+  });
+
+  go('result');
+}
+</script>
+</body>
+</html>
